@@ -3,6 +3,8 @@ import requests
 import json
 import random
 import time
+import os
+from dotenv import load_dotenv
 
 # ---------------------------------------------------
 # PAGE CONFIG
@@ -18,7 +20,16 @@ st.set_page_config(
 # OPENROUTER API KEY
 # ---------------------------------------------------
 
-OPENROUTER_API_KEY = st.secrets["OPENROUTER_API_KEY"]
+load_dotenv()
+
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+
+if not OPENROUTER_API_KEY:
+    try:
+        OPENROUTER_API_KEY = st.secrets["OPENROUTER_API_KEY"]
+    except Exception:
+        st.error("OpenRouter API key not found.")
+        st.stop()
 
 # ---------------------------------------------------
 # SESSION STATE
@@ -281,7 +292,7 @@ def ask_ai(prompt):
             },
 
             data=json.dumps({                
-                "model": "openai/gpt-3.5-turbo",
+                "model": "openai/gpt-4o-mini",
                 "messages": [
                     {
                         "role": "user",
